@@ -1,10 +1,18 @@
 package frames
 
-import com.tinkerpop.frames.Property
-import org.codehaus.groovy.ast.builder.AstBuilder
+import org.codehaus.groovy.ast.ClassNode
+import org.codehaus.groovy.ast.MethodNode
+import org.codehaus.groovy.ast.Parameter
+import org.codehaus.groovy.ast.stmt.EmptyStatement
 
 import static org.objectweb.asm.Opcodes.ACC_ABSTRACT
 import static org.objectweb.asm.Opcodes.ACC_PUBLIC
+import org.codehaus.groovy.ast.AnnotatedNode
+import org.codehaus.groovy.ast.AnnotationNode
+import com.tinkerpop.frames.Property
+import org.codehaus.groovy.ast.expr.ConstantExpression
+import org.codehaus.groovy.ast.stmt.ReturnStatement
+import org.codehaus.groovy.ast.ClassHelper
 
 /**
  * Created with IntelliJ IDEA.
@@ -20,37 +28,20 @@ class PropertyAccessorsGenerator {
 
     def generate() {
         def name = field.name
-        def clazz = field.type.typeClass
-        def ast = new AstBuilder().buildFromSpec {
-            method("get${name.capitalize()}", ACC_PUBLIC | ACC_ABSTRACT, clazz) {
-                parameters {}
-                exceptions {}
-                block {}
-                annotations {
-                    annotation Property.class, {
-                        member "value", {
-                            constant(name)
-                        }
-                    }
-                }
-            }
+        def type = field.type
 
-            method("set${name.capitalize()}", ACC_PUBLIC | ACC_ABSTRACT, Void.TYPE) {
-                parameters {parameter([(name): clazz])}
-                exceptions {}
-                block {}
-                annotations {
-                    annotation Property.class, {
-                        member "value", {
-                            constant(name)
-                        }
-                    }
-                }
-            }
-        }
+        def annotation = new AnnotationNode(new ClassNode(Property.class))
+        annotation.addMember("value", new ConstantExpression(name))
 
-        ast.each {
-            classNode.addMethod(it)
-        }
+        def getter = new MethodNode("get${name.capitalize()}", ACC_PUBLIC | ACC_ABSTRACT, type,
+                Parameter.EMPTY_ARRAY, ClassNode.EMPTY_ARRAY, new EmptyStatement())
+        getter.addAnnotation(annotation)
+
+        def setter = new MethodNode("set${name.capitalize()}", ACC_PUBLIC | ACC_ABSTRACT, ClassHelper.VOID_TYPE,
+                [new Parameter(type, name)] as Parameter[], ClassNode.EMPTY_ARRAY, new EmptyStatement())
+        setter.addAnnotation(annotation)
+
+        classNode.addMethod(getter)
+        classNode.addMethod(setter)
     }
 }

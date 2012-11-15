@@ -47,7 +47,9 @@ class PropertyGenerationTest extends GroovyTestCase {
 public interface Vertex1 {
 
     String name, surname
-    int number;
+    int number
+
+    Vertex2 friend
 }
 
 @Frame
