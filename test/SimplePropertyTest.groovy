@@ -3,11 +3,13 @@ import com.tinkerpop.frames.Property
 import frames.Frame
 import frames.FrameProperty
 import org.junit.Test
+import javax.swing.JFrame
+import javax.swing.JWindow
 
 /**
  * @author Marek Piechut <m.piechut@tt.com.pl>
  */
-class PropertyGenerationTest extends GroovyTestCase {
+class SimplePropertyTest extends GroovyTestCase {
 
     @Test
     void testGetter() {
@@ -17,6 +19,7 @@ class PropertyGenerationTest extends GroovyTestCase {
 
         assert Vertex1.class.getDeclaredMethod("getName").returnType == String.class
         assert Vertex1.class.getDeclaredMethod("getNumber").returnType == Integer.TYPE
+        assert Vertex1.class.getDeclaredMethod("getWindow").returnType== JWindow.class
 
         assert !Vertex1.class.getDeclaredMethod("getName").parameterTypes
 
@@ -38,6 +41,7 @@ class PropertyGenerationTest extends GroovyTestCase {
 
         assert Vertex1.class.getDeclaredMethod("setName", String.class).parameterTypes == [String.class]
         assert Vertex1.class.getDeclaredMethod("setNumber", Integer.TYPE).parameterTypes == [Integer.TYPE]
+        assert Vertex1.class.getDeclaredMethod("setWindow", JWindow.class).parameterTypes == [JWindow.class]
 
         def annotations = Vertex1.class.getDeclaredMethod("setName", String.class).annotations
 
@@ -55,13 +59,8 @@ public interface Vertex1 {
     String name, surname
     @FrameProperty
     int number
+    @FrameProperty
+    JWindow window
 
     String regular
-
-    Vertex2 friend
-}
-
-@Frame
-public interface Vertex2 {
-    String name
 }

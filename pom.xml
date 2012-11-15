@@ -144,5 +144,10 @@
             <version>1.6.6</version>
             <scope>runtime</scope>
         </dependency>
+        <dependency>
+            <groupId>org.spockframework</groupId>
+            <artifactId>spock-core</artifactId>
+            <version>0.7-groovy-1.8</version>
+        </dependency>
     </dependencies>
 </project>
