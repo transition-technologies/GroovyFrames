@@ -14,4 +14,5 @@ import com.tinkerpop.blueprints.Direction
 @Target(ElementType.FIELD)
 public @interface FrameElement {
     Direction value() default Direction.OUT
+    String label() default ""
 }

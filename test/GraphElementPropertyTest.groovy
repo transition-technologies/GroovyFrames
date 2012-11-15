@@ -47,6 +47,7 @@ class GraphElementPropertyTest extends Specification {
         method        | direction
         "getEdge"     | Direction.OUT
         "getEdgeOut"  | Direction.OUT
+//        "getEdges"    | Direction.OUT
         "getEdgeIn"   | Direction.IN
         "getEdgeBoth" | Direction.BOTH
     }
@@ -69,6 +70,8 @@ interface FramedVertex extends VertexFrame {
     @FrameElement(Direction.BOTH)
     Edge edgeBoth
 
+    @FrameElement
+    Iterable<Edge> edges
 }
 
 interface PlainVertex {

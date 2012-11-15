@@ -15,6 +15,7 @@ import static org.objectweb.asm.Opcodes.ACC_PUBLIC
  * Time: 10:35 AM
  * To change this template use File | Settings | File Templates.
  */
+@Mixin(GeneratorMethods)
 class PropertyGenerator {
 
     def generate(classNode, field) {
@@ -38,15 +39,5 @@ class PropertyGenerator {
 
     def isValid(field) {
         field.getAnnotations(new ClassNode(FrameProperty.class))
-    }
-
-    static def getter(name, type) {
-        new MethodNode("get${name.capitalize()}", ACC_PUBLIC | ACC_ABSTRACT, type,
-                Parameter.EMPTY_ARRAY, ClassNode.EMPTY_ARRAY, EmptyStatement.INSTANCE)
-    }
-
-    static def setter(name, type) {
-        new MethodNode("set${name.capitalize()}", ACC_PUBLIC | ACC_ABSTRACT, ClassHelper.VOID_TYPE,
-                [new Parameter(type, name)] as Parameter[], ClassNode.EMPTY_ARRAY, EmptyStatement.INSTANCE)
     }
 }
