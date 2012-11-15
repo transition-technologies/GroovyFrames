@@ -24,11 +24,15 @@ class FramesASTProcessor implements ASTTransformation {
         nodes.grep { it instanceof ClassNode }.each { node ->
             println "Processing node: $node"
             node.fields.each { field ->
-                println "Processing field: ${field.name}"
+                println "Processing field: ${field.name}: ${field.annotations}"
                 def generator = new PropertyAccessorsGenerator(classNode: node, field: field)
                 generator.generate()
                 node.fields -= field
             }
         }
+    }
+
+    private def createGenerator(field) {
+        def generator = new PropertyAccessorsGenerator(classNode: node, field: field)
     }
 }

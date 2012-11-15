@@ -30,18 +30,23 @@ class PropertyAccessorsGenerator {
         def name = field.name
         def type = field.type
 
-        def annotation = new AnnotationNode(new ClassNode(Property.class))
-        annotation.addMember("value", new ConstantExpression(name))
+        def annotation = field.getAnnotations(new ClassNode(FrameProperty.class))
 
-        def getter = new MethodNode("get${name.capitalize()}", ACC_PUBLIC | ACC_ABSTRACT, type,
-                Parameter.EMPTY_ARRAY, ClassNode.EMPTY_ARRAY, new EmptyStatement())
-        getter.addAnnotation(annotation)
+        if (annotation) {
+            def propertyAnnotation = new AnnotationNode(new ClassNode(Property.class))
+            propertyAnnotation.addMember("value", new ConstantExpression(name))
 
-        def setter = new MethodNode("set${name.capitalize()}", ACC_PUBLIC | ACC_ABSTRACT, ClassHelper.VOID_TYPE,
-                [new Parameter(type, name)] as Parameter[], ClassNode.EMPTY_ARRAY, new EmptyStatement())
-        setter.addAnnotation(annotation)
+            def getter = new MethodNode("get${name.capitalize()}", ACC_PUBLIC | ACC_ABSTRACT, type,
+                    Parameter.EMPTY_ARRAY, ClassNode.EMPTY_ARRAY, new EmptyStatement())
+            getter.addAnnotation(propertyAnnotation)
+            classNode.addMethod(getter)
 
-        classNode.addMethod(getter)
-        classNode.addMethod(setter)
+            def setter = new MethodNode("set${name.capitalize()}", ACC_PUBLIC | ACC_ABSTRACT, ClassHelper.VOID_TYPE,
+                    [new Parameter(type, name)] as Parameter[], ClassNode.EMPTY_ARRAY, new EmptyStatement())
+            setter.addAnnotation(propertyAnnotation)
+
+
+            classNode.addMethod(setter)
+        }
     }
 }
