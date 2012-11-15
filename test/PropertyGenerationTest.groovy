@@ -1,6 +1,9 @@
 import com.tinkerpop.frames.Property
 import frames.Frame
 import org.junit.Test
+import com.tinkerpop.frames.Incidence
+import com.tinkerpop.frames.Adjacency
+import com.tinkerpop.blueprints.Direction
 
 /**
  * @author Marek Piechut <m.piechut@tt.com.pl>
@@ -9,12 +12,12 @@ class PropertyGenerationTest extends GroovyTestCase {
 
     @Test
     void testGetter() {
-        def methods = Bean.class.declaredMethods
+        def methods = Vertex1.class.declaredMethods
         assert methods*.name.containsAll('getName', 'getSurname', 'getNumber')
-        assert Bean.class.getDeclaredMethod("getName").returnType == String.class
-        assert Bean.class.getDeclaredMethod("getNumber").returnType == Integer.TYPE
+        assert Vertex1.class.getDeclaredMethod("getName").returnType == String.class
+        assert Vertex1.class.getDeclaredMethod("getNumber").returnType == Integer.TYPE
 
-        def annotations = Bean.class.getDeclaredMethod("getName").annotations
+        def annotations = Vertex1.class.getDeclaredMethod("getName").annotations
 
         assert annotations.size() == 1
         assert annotations[0] instanceof Property
@@ -23,15 +26,15 @@ class PropertyGenerationTest extends GroovyTestCase {
 
     @Test
     void testSetter() {
-        def methods = Bean.class.declaredMethods
+        def methods = Vertex1.class.declaredMethods
         assert methods*.name.containsAll('setName', 'setSurname', 'setNumber')
-        assert Bean.class.getDeclaredMethod("setName", String.class).returnType == Void.TYPE
-        assert Bean.class.getDeclaredMethod("setNumber", Integer.TYPE).returnType == Void.TYPE
+        assert Vertex1.class.getDeclaredMethod("setName", String.class).returnType == Void.TYPE
+        assert Vertex1.class.getDeclaredMethod("setNumber", Integer.TYPE).returnType == Void.TYPE
 
-        assert Bean.class.getDeclaredMethod("setName", String.class).parameterTypes == [String.class]
-        assert Bean.class.getDeclaredMethod("setNumber", Integer.TYPE).parameterTypes == [Integer.TYPE]
+        assert Vertex1.class.getDeclaredMethod("setName", String.class).parameterTypes == [String.class]
+        assert Vertex1.class.getDeclaredMethod("setNumber", Integer.TYPE).parameterTypes == [Integer.TYPE]
 
-        def annotations = Bean.class.getDeclaredMethod("setName", String.class).annotations
+        def annotations = Vertex1.class.getDeclaredMethod("setName", String.class).annotations
 
         assert annotations.size() == 1
         assert annotations[0] instanceof Property
@@ -41,8 +44,13 @@ class PropertyGenerationTest extends GroovyTestCase {
 
 
 @Frame
-public interface Bean {
+public interface Vertex1 {
 
     String name, surname
     int number;
+}
+
+@Frame
+public interface Vertex2 {
+    String name
 }

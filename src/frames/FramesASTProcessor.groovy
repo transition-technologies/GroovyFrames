@@ -17,7 +17,7 @@ import static org.objectweb.asm.Opcodes.ACC_PUBLIC
  * @author Marek Piechut <m.piechut@tt.com.pl>
  */
 @Slf4j
-@GroovyASTTransformation(phase = CompilePhase.SEMANTIC_ANALYSIS)
+@GroovyASTTransformation(phase = CompilePhase.CANONICALIZATION)
 class FramesASTProcessor implements ASTTransformation {
 
     public void visit(ASTNode[] nodes, SourceUnit sourceUnit) {
@@ -25,44 +25,10 @@ class FramesASTProcessor implements ASTTransformation {
             println "Processing node: $node"
             node.fields.each { field ->
                 println "Processing field: ${field.name}"
-                def accessors = generateAccessors(field.type, field.name)
-                accessors.each {
-                    node.addMethod(it)
-                }
+                def generator = new PropertyAccessorsGenerator(classNode: node, field: field)
+                generator.generate()
                 node.fields -= field
             }
         }
-    }
-
-    private def generateAccessors(type, name) {
-        def ast = new AstBuilder().buildFromSpec {
-            method("get${name.capitalize()}", ACC_PUBLIC | ACC_ABSTRACT, type.typeClass) {
-                parameters {}
-                exceptions {}
-                block {}
-                annotations {
-                    annotation Property.class, {
-                        member "value", {
-                            constant(name)
-                        }
-                    }
-                }
-            }
-
-            method("set${name.capitalize()}", ACC_PUBLIC | ACC_ABSTRACT, Void.TYPE) {
-                parameters {parameter([(name): type.typeClass])}
-                exceptions {}
-                block {}
-                annotations {
-                    annotation Property.class, {
-                        member "value", {
-                            constant(name)
-                        }
-                    }
-                }
-            }
-        }
-
-        return ast
     }
 }
