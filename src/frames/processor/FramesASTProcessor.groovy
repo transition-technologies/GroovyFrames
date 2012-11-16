@@ -21,9 +21,9 @@ class FramesASTProcessor implements ASTTransformation {
 
     public void visit(ASTNode[] nodes, SourceUnit sourceUnit) {
         nodes.grep { it instanceof ClassNode }.each { node ->
-            println "Processing node: $node"
+            log.debug "Processing node: $node"
             node.fields?.each { field ->
-                println "Processing field: ${field.name}: ${field.annotations}"
+                log.debug "Processing field: ${field.name}: ${field.annotations}"
                 generators.each {generator ->
                     if (generator.isValid(field)) {
                         generator.generate(node, field)
