@@ -1,12 +1,9 @@
-package frames
+package frames.processor
 
 import com.tinkerpop.frames.Property
 import org.codehaus.groovy.ast.expr.ConstantExpression
-import org.codehaus.groovy.ast.stmt.EmptyStatement
-import org.codehaus.groovy.ast.*
 
-import static org.objectweb.asm.Opcodes.ACC_ABSTRACT
-import static org.objectweb.asm.Opcodes.ACC_PUBLIC
+import org.codehaus.groovy.ast.*
 
 /**
  * Created with IntelliJ IDEA.
@@ -25,19 +22,12 @@ class PropertyGenerator {
         def propertyAnnotation = new AnnotationNode(ClassHelper.makeCached(Property.class))
         propertyAnnotation.addMember("value", new ConstantExpression(name))
 
-        def getter = getter(name, type)
-        getter.addAnnotation(propertyAnnotation)
-        classNode.addMethod(getter)
-
-        def setter = setter(name, type)
-        setter.addAnnotation(propertyAnnotation)
-
-
-        classNode.addMethod(setter)
-
+        addProperty(classNode, name, type, propertyAnnotation)
     }
 
     def isValid(field) {
-        field.getAnnotations(new ClassNode(FrameProperty.class))
+        use(FieldValidationCategory) {
+            return field.isProperty()
+        }
     }
 }

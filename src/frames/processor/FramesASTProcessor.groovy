@@ -1,4 +1,4 @@
-package frames
+package frames.processor
 
 import groovy.util.logging.Slf4j
 import org.codehaus.groovy.ast.ASTNode
@@ -17,7 +17,7 @@ import org.codehaus.groovy.transform.GroovyASTTransformation
 class FramesASTProcessor implements ASTTransformation {
 
 
-    def generators = [new PropertyGenerator(), new IncidenceGenerator()]
+    def generators = [new PropertyGenerator(), new ElementGenerator(), new ElementListGenerator()]
 
     public void visit(ASTNode[] nodes, SourceUnit sourceUnit) {
         nodes.grep { it instanceof ClassNode }.each { node ->

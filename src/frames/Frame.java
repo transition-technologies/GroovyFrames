@@ -12,6 +12,6 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-@GroovyASTTransformationClass("frames.FramesASTProcessor")
+@GroovyASTTransformationClass("frames.processor.FramesASTProcessor")
 public @interface Frame {
 }
