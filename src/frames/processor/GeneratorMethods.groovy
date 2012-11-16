@@ -31,7 +31,8 @@ class GeneratorMethods {
 
     def createConnectionAnnotation(field) {
         use(FieldValidationCategory) {
-            def fieldName = field.name
+            def fieldName = field.isCollection() ? (field.name.endsWith('s') ? field.name[0..-2] : field.name) : field.name
+
             def elementAnnotation = field.getAnnotations(ClassHelper.makeCached(FrameElement.class))[0]
 
             def directionExpression = elementAnnotation.getMember("value")
